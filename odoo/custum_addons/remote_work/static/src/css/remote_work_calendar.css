@@ -1,0 +1,14 @@
+.fc-day-past {
+    background-color: #f8f9fa;
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.fc-day-past .fc-day-number {
+    color: #adb5bd;
+}
+
+.fc-day-past .fc-event {
+    pointer-events: none;
+    opacity: 0.6;
+}

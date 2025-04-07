@@ -1,0 +1,88 @@
+<odoo>
+
+
+
+    <record id="view_remote_work_request_action" model="ir.actions.act_window">
+        <field name="name">Request remote work </field>
+        <field name="res_model">remote.work.request</field>
+        <field name="view_mode">tree,form,calendar,activity</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p>VIDE</p>
+        </field>
+    </record>
+
+    <record id="request_remotework_tree" model="ir.ui.view">
+        <field name="name">remote.work.request.tree</field>
+        <field name="model">remote.work.request</field>
+        <field name="arch" type="xml">
+            <tree string="Remote work"
+            decoration-info="state == 'pending'"
+                    decoration-danger="state == 'rejected'"
+                    decoration-warning="state == 'expired'"
+                    decoration-success="state == 'approved'"
+                    decoration-muted="state == 'canceled'"  >
+                <field name="employee_id" widget="many2one_avatar_user" />
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="state" widget="badge"
+                    decoration-info="state == 'pending'"
+                    decoration-danger="state == 'rejected'"
+                    decoration-warning="state == 'expired'"
+                    decoration-success="state == 'approved'"
+                    decoration-muted="state == 'canceled'"
+
+                />
+            </tree>
+        </field>
+    </record>
+
+    <record id="request_remotework_event_form_quick_create" model="ir.ui.view">
+        <field name="name">remote.work.request.form</field>
+        <field name="model">remote.work.request</field>
+        <field name="arch" type="xml">
+            <form string="Calendar create request">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="employee_id" string="Employee"/>
+                        <field name="employee_id" widget="many2one_avatar_user" class="oe_inline"/>
+                    </div>
+                    <group>
+                        <group string="Dates">
+                            <field name="start_date" string="Start Date" />
+                            <field name="end_date" string="End Date" />
+                        </group>
+                    </group>
+             </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="request_remotework_calendar" model="ir.ui.view">
+        <field name="name">remote.work.request.calendar</field>
+        <field name="model">remote.work.request</field>
+        <field name="priority" eval="2"/>
+        <field name="arch" type="xml">
+           <calendar  string="Remote Work Requests"  mode="month" date_start="start_date" date_stop="end_date" color="employee_id"
+                      event_open_popup="true"
+                      quick_create="False"
+                      quick_create_view_id="%(remote_work.request_remotework_event_form_quick_create)d"
+                      js_class="remote_work_calendar"
+                      >
+                <field name="employee_id" invisible="1" filters="1" />
+                <field name="start_date" string="Start Date" />
+                <field name="end_date" string="End Date" />
+                <field name="state" widget="badge"  filters="1"
+                    decoration-info="state == 'pending'"
+                    decoration-danger="state == 'rejected'"
+                    decoration-warning="state == 'expired'"
+                    decoration-success="state == 'approved'"
+                    decoration-muted="state == 'canceled'"
+
+                />
+            </calendar>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+
+        <!-- Action to open the breaks wizard -->
+        <record id="action_open_attendance_wizard" model="ir.actions.act_window">
+            <field name="name">Attendance Details</field>
+            <field name="res_model">hr.break.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{'default_attendance_id': active_id}</field>
+        </record>
+
+        <record id="hr_attendance_tree_view" model="ir.ui.view">
+            <field name="name">hr.attendance.tree</field>
+            <field name="model">hr.attendance</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="employee_id" widget="many2one_avatar_user"/>
+                    <field name="check_in"/>
+                    <field name="check_out"/>
+                    <field name="worked_hours_display" decoration-danger="is_under_8_hours"/>
+                    <field name="overtime_hours"/>
+                    <button string="View Break Details" type="object" name="action_view_attendance_details" class="btn-info" icon="fa-eye"/>
+                    <field name="is_under_8_hours" invisible="1" optional="1"/>
+
+                </tree>
+
+            </field>
+        </record>
+
+        <record id="action_hr_attendance_list" model="ir.actions.act_window">
+            <field name="name">Import-Export</field>
+            <field name="res_model">hr.attendance</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="hr_attendance_tree_view"/>
+        </record>
+
+        <record id="view_hr_attendance_kanban" model="ir.ui.view">
+            <field name="name">hr.attendance.kanban</field>
+            <field name="model">hr.attendance</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile" sample="1">
+                    <field name="employee_id"/>
+                    <field name="check_in"/>
+                    <field name="check_out"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="o_kanban_record_title">
+                                    <field name="employee_id" widget="many2one_avatar_user" options="{'display_avatar_name': True}" class="fs-5 fw-bold"/>
+                                </div>
+                                <hr class="mt4 mb8"/>
+                                <div class="o_kanban_record_subtitle">
+                                    <i class="fa fa-calendar" aria-label="Period" role="img" title="Period"></i>
+                                    <t t-esc="record.check_in.value"/>
+                                    - <t t-esc="record.check_out.value"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="hr_attendance_view_graph" model="ir.ui.view">
+            <field name="name">hr.attendance.graph</field>
+            <field name="model">hr.attendance</field>
+            <field name="arch" type="xml">
+                <graph string="Worked Hours" type="line" stacked="0" sample="1">
+                    <field name="employee_id" type="row"/>
+                    <field name="check_in" interval="week" type="col"/>
+                    <field name="overtime_hours" widget="float_time"/>
+                    <field name="worked_hours" type="measure" widget="float_time"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="hr_attendance_view_pivot" model="ir.ui.view">
+            <field name="name">hr.attendance.pivot</field>
+            <field name="model">hr.attendance</field>
+            <field name="arch" type="xml">
+                <pivot string="Worked Hours">
+                    <field name="employee_id" type="row"/>
+                    <field name="check_in" type="col" interval="month"/>
+                    <field name="worked_hours" type="measure" widget="float_time"/>
+                    <field name="overtime_hours" type="measure" widget="float_time"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="hr_attendance_view_filter" model="ir.ui.view">
+            <field name="name">hr_attendance_view_filter</field>
+            <field name="model">hr.attendance</field>
+            <field name="arch" type="xml">
+                <search string="Hr Attendance Search">
+                    <field name="employee_id"/>
+                    <field name="department_id" operator="child_of"/>
+                    <field name="check_in"/>
+                    <filter string="My Attendances" name="myattendances" domain="[('employee_id.user_id', '=', uid)]" />
+                    <filter string="My Team" name="myteam" domain="[('employee_id.parent_id.user_id', '=', uid)]"/>
+                    <separator/>
+                    <filter string="At Work" name="nocheckout" domain="[('check_out', '=', False)]" />
+                    <filter string="Errors" name="errors"
+                            domain="['|', ('worked_hours', '&gt;=', 16), '&amp;', ('check_out', '=', False), ('check_in', '&lt;=',  (context_today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]"                />
+                    <separator/>
+                    <filter string="Check In" name="check_in_filter" date="check_in"/>
+                    <filter string="Last 7 days" name="last_week" domain="[(
+                        'check_in','&gt;=', (
+                            context_today() + datetime.timedelta(days=-7)
+                            )
+                        )]"/>
+                    <filter string="Last 3 Months" invisible="1" name="last_three_months" domain="[(
+                        'check_in','&gt;=', (
+                            context_today() + datetime.timedelta(days=-90)
+                            )
+                        )]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Check In" name="groupby_name" context="{'group_by': 'check_in:week'}"/>
+                        <filter string="Employee" name="employee" context="{'group_by': 'employee_id'}"/>
+                        <filter string="Check Out" name="groupby_check_out" context="{'group_by': 'check_out'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="hr_attendance_reporting" model="ir.actions.act_window">
+                <field name="name">Attendances</field>
+                <field name="res_model">hr.attendance</field>
+                <field name="view_mode">graph,pivot</field>
+                <field name="search_view_id" ref="hr_attendance_view_filter"/>
+                <field name="context">
+                    {
+                        "search_default_groupby_name" : 1,
+                        "search_default_employee": 1,
+                        "search_default_last_three_months": 1
+                    }
+                </field>
+                <field name="help" type="html">
+                    <p class="o_view_nocontent_empty_folder">
+                        No attendance records found
+                    </p><p>
+                        The attendance reporting of your employees will be displayed here.
+                    </p>
+                </field>
+            </record>
+        <!-- Root menu -->
+
+        <menuitem id="menu_hr_attendance_root_menu" name="Manage Remote" sequence="10" action="action_hr_attendance_list"/>
+
+        <!-- Main submenu -->
+        <menuitem id="menu_hr_attendance_main" name="Attendances" parent="menu_hr_attendance_root_menu" sequence="20"/>
+        <menuitem id="menu_hr_attendance_reporting" name="Reporting" parent="menu_hr_attendance_root_menu" sequence="15" groups="hr_attendance.group_hr_attendance_officer" action="hr_attendance_reporting"/>
+
+
+        <!-- Check In-Out menu -->
+      <menuitem id="checkin_checkout_wizard_menu" name="Check In-Out" parent="menu_hr_attendance_main" action="action_checkin_checkout_wizard"/>
+
+        <!-- Pause-Reprise menu -->
+      <menuitem id="pause_reprise_wizard_menu" name="Pause-Reprise" parent="menu_hr_attendance_main" action="action_pause_reprise_wizard"/>
+
+      <menuitem id="menu_remote_work_request" name="Requests" parent="menu_hr_attendance_root_menu" action="view_remote_work_request_action"/>
+
+    </data>
+</odoo>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_checkin_checkout_wizard" model="ir.ui.view">
+        <field name="name">checkin.checkout.wizard.form</field>
+        <field name="model">checkin.checkout.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Check-IN / Check-OUT Management">
+                   <sheet>
+                        <group>
+                            <field name="employee_id" readonly="1"/>
+                            <field name="check_in" readonly="1"/>
+                            <field name="disabled_check_in" invisible="1"/>
+                            <field name="disabled_check_out" invisible="1"/>
+                            <field name="is_on_break" invisible="1"/>
+                        </group>
+                        <footer>
+                            <button name="toggle_checkin" type="object" string="Check In" class="btn-primary" invisible="disabled_check_in"/>
+                            <button name="toggle_checkout" type="object" string="Check Out" class="btn-danger" invisible="disabled_check_out or is_on_break"/>
+                            <p invisible="not is_on_break" class="text-danger">Please end the break before checking out.</p>
+                            <button string="Cancel" class="btn-secondary" invisible="is_on_break" special="cancel"/>
+                        </footer>
+                   </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_checkin_checkout_wizard" model="ir.actions.act_window">
+        <field name="name">Check IN-OUT</field>
+        <field name="res_model">checkin.checkout.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_checkin_checkout_wizard"/>
+        <field name="target">new</field>
+    </record>
+
+</odoo>
