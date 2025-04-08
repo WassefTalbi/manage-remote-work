@@ -1,0 +1,26 @@
+/* Force display of all state columns */
+.remote_work_kanban .o_kanban_group {
+    min-width: 250px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+/* Style empty columns */
+.remote_work_kanban .o_kanban_group:empty::before {
+    content: "No records";
+    display: block;
+    padding: 15px;
+    color: #666;
+    font-style: italic;
+    text-align: center;
+}
+
+/* Progress bar styling */
+.remote_work_kanban .o_kanban_counter {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.remote_work_kanban .o_kanban_counter .o_kanban_counter_progress {
+    display: block !important;
+}

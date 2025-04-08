@@ -8,14 +8,12 @@ import { _t } from "@web/core/l10n/translation";
 patch(CalendarCommonRenderer.prototype, {
     setup() {
         super.setup();
-        console.log("Calendar Renderer setup");
         this.pastDatesDisabled = true;
         this.notification = useService("notification");
     },
 
     onDayRender(info) {
         super.onDayRender(info);
-        console.log("Rendering day:", info);
         if (this.pastDatesDisabled) {
             const today = new Date();
             today.setHours(0, 0, 0, 0);
@@ -25,7 +23,6 @@ patch(CalendarCommonRenderer.prototype, {
                 info.el.style.pointerEvents = 'auto';
                 info.el.style.cursor = 'not-allowed';
                 info.el.addEventListener('click', (ev) => {
-                    console.log("Blocked click on past date:", info.date);
                     ev.stopPropagation();
                     ev.preventDefault();
                 });

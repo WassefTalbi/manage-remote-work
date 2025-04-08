@@ -11,6 +11,7 @@
     'depends': ['base','hr_attendance','web','calendar'],
     'data': [
          'security/ir.model.access.csv',
+         'security/remote_work_rules.xml',
          'views/checkin_checkout_wizard_views.xml',
          'views/pause_reprise_wizard_views.xml',
          'views/hr_break_wizard_views.xml',
@@ -25,6 +26,7 @@
         'web.assets_backend': [
             'remote_work/static/src/js/remote_work_calendar.js',
             'remote_work/static/src/css/remote_work_calendar.css',
+            'remote_work/static/src/css/remote_work_kanban.css',
         ],
     },
     'application': True,

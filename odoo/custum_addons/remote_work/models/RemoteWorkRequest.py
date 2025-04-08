@@ -18,8 +18,11 @@ class RemoteWorkRequest(models.Model):
         ('rejected', 'Rejected'),
         ('canceled','Canceled'),
         ('expired','Expired')
-    ], string='Status',default='pending')
+    ], string='Status',default='pending',group_expand="_read_group_states")
 
+    @api.model
+    def _read_group_states(self,stages,domain,order):
+        return ['pending', 'approved', 'rejected']
     @api.model
     def create(self, vals):
         today = date.today()
@@ -61,4 +64,16 @@ class RemoteWorkRequest(models.Model):
                 raise ValidationError("End date cannot be in the past!")
             if record.end_date < record.start_date:
                 raise ValidationError("End date must be after start date!")
+
+    def action_approve(self):
+        for record in self:
+            if record.state == 'pending':
+                record.write({'state': 'approved'})
+
+    def action_reject(self):
+        for record in self:
+            if record.state == 'pending':
+                record.write({'state': 'rejected'})
+
+
 
