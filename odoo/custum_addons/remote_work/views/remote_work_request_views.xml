@@ -90,9 +90,11 @@
     <record id="request_remotework_kanban" model="ir.ui.view">
         <field name="name">remote.work.request.kanban</field>
         <field name="model">remote.work.request</field>
+        <field name="groups_id" eval="[(4, ref('remote_work.group_remote_work_user'))]"/>
         <field name="arch" type="xml">
-            <kanban default_group_by="state" quick_create="False">
-                <field name="employee_id"/>
+            <kanban  default_group_by="state" quick_create="False" js_class="remote_work_kanban">
+
+                <field name="employee_id" />
                 <field name="start_date"/>
                 <field name="end_date"/>
 
@@ -103,12 +105,7 @@
             }' />
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click"
-                             t-att-class="{
-                                 'oe_kanban_card_pending': record.state.raw_value == 'pending',
-                                 'oe_kanban_card_approved': record.state.raw_value == 'approved',
-                                 'oe_kanban_card_rejected': record.state.raw_value == 'rejected'
-                             }">
+                        <div class="oe_kanban_global_click">
                             <div class="o_kanban_record_top">
                                 <div class="o_kanban_record_headings">
                                     <strong>

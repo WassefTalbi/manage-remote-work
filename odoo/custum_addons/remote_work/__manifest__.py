@@ -25,6 +25,7 @@
        'assets': {
         'web.assets_backend': [
             'remote_work/static/src/js/remote_work_calendar.js',
+            'remote_work/static/src/js/remote_work_kanban.js',
             'remote_work/static/src/css/remote_work_calendar.css',
             'remote_work/static/src/css/remote_work_kanban.css',
         ],

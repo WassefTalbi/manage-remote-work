@@ -4,7 +4,8 @@ access_hr_break,take break,model_hr_break,base.group_user,1,1,1,1
 access_pause_reprise_wizard_user,Pause Reprise Wizard User,model_pause_reprise_wizard,,1,1,1,0
 access_checkin_wizard_user,Check-In Wizard User,model_checkin_checkout_wizard,,1,1,1,0
 access_attendance_break_wizard_details,attendance break details Wizard User,model_hr_break_wizard,,1,1,1,0
-access_remote_work_request,access_remote_work_request,model_remote_work_request,base.group_user,1,1,1,1
+access_remote_work_request_user,remote.work.request.user,model_remote_work_request,remote_work.group_remote_work_user,1,0,1,0
+access_remote_work_request_manager,remote.work.request.manager,model_remote_work_request,remote_work.group_remote_work_manager,1,1,1,1
 access_remote_work_day,access_remote_work_day,model_remote_work_day,,1,1,1,1
 
 

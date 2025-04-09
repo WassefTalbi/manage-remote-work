@@ -30,7 +30,5 @@
             ]</field>
             <field name="groups" eval="[(4, ref('group_remote_work_manager'))]"/>
         </record>
-
-
     </data>
 </odoo>
