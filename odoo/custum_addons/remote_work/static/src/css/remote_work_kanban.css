@@ -1,26 +1,101 @@
-/* Force display of all state columns */
-.remote_work_kanban .o_kanban_group {
-    min-width: 250px;
-    display: inline-block;
-    vertical-align: top;
+/* Card Layout */
+.remote-work-card {
+    border-radius: 10px;
+    border: 1px solid #eaeaea;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    margin:7px;
 }
 
-/* Style empty columns */
-.remote_work_kanban .o_kanban_group:empty::before {
-    content: "No records";
+.card-header {
+    border-bottom: 1px solid #f5f5f5;
+     position: relative;
+    padding-right: 40px;
+}
+
+.employee-details {
+    flex: 1;
+    margin-left: 12px;
+}
+
+.employee-name {
+    font-size: 15px;
+    color: #333;
+    font-weight: 600;
     display: block;
-    padding: 15px;
+    margin-bottom: 4px;
+}
+
+.request-date {
+    font-size: 12px;
     color: #666;
-    font-style: italic;
+}
+
+.request-date .date-label {
+    font-weight: 500;
+    margin-right: 4px;
+}
+
+.card-body {
+    padding: 16px;
+}
+
+.date-range {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.date-item {
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+}
+
+.date-icon {
+    color: #999;
+    margin-right: 8px;
+    font-size: 14px;
+    width: 16px;
     text-align: center;
 }
 
-/* Progress bar styling */
-.remote_work_kanban .o_kanban_counter {
-    opacity: 1 !important;
-    visibility: visible !important;
+.date-value {
+    color: #444;
+    font-weight: 500;
 }
 
-.remote_work_kanban .o_kanban_counter .o_kanban_counter_progress {
-    display: block !important;
+.status-icon {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    font-size: 20px;
 }
+
+.status-icon i {
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.status-approved {
+    color: #28a745;
+}
+
+.status-rejected {
+    color: #dc3545;
+}
+
+.status-pending {
+    color: #ffc107;
+}
+
+
+
+
+
+
+

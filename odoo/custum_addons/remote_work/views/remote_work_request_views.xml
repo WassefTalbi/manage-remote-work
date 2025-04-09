@@ -85,48 +85,75 @@
         </field>
     </record>
 
-
-
     <record id="request_remotework_kanban" model="ir.ui.view">
         <field name="name">remote.work.request.kanban</field>
         <field name="model">remote.work.request</field>
         <field name="groups_id" eval="[(4, ref('remote_work.group_remote_work_user'))]"/>
         <field name="arch" type="xml">
-            <kanban  default_group_by="state" quick_create="False" js_class="remote_work_kanban">
-
-                <field name="employee_id" />
+            <kanban default_group_by="state" quick_create="False" class="centered-kanban-view" js_class="remote_work_kanban">
+                <field name="employee_id"/>
                 <field name="start_date"/>
                 <field name="end_date"/>
-
+                <field name="state"/>
                 <progressbar field="state" colors='{
-                "pending": "warning",
-                "approved": "success",
-                "rejected": "danger"
-            }' />
+                    "pending": "warning",
+                    "approved": "success",
+                    "rejected": "danger"
+                }'/>
+
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
-                            <div class="o_kanban_record_top">
-                                <div class="o_kanban_record_headings">
-                                    <strong>
-                                        <field name="employee_id" widget="many2one_avatar_user"/>
-                                    </strong>
-                                    <div class="o_kanban_state">
-                                        <field name="state" widget="badge"/>
+                        <div class="oe_kanban_global_click remote-work-card">
+
+                            <div class="card-header">
+                                <div class="employee-info">
+                                    <div class="employee-avatar-container">
+                                        <field name="employee_id" widget="many2one_avatar_user" class="employee-avatar-large"/>
+                                    </div>
+                                    <div class="employee-details">
+                                        <strong class="employee-name">
+                                            <field name="employee_id"/>
+                                        </strong>
+                                        <div class="request-date">
+                                            <span class="date-label">Requested At: </span>
+                                            <span class="date-value">
+                                                <field name="create_date" widget="date"/>
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="o_kanban_record_content">
-                                    <div>
-                                        <span>From: </span>
-                                        <field name="start_date"/>
-                                    </div>
-                                    <div>
-                                        <span>To: </span>
-                                        <field name="end_date"/>
-                                    </div>
+
+                                <div class="status-icon">
+                                      <t t-if="record.state.raw_value == 'approved'">
+                                        <i class="fa fa-check-circle status-approved" title="Approved"/>
+                                     </t>
+                                    <t t-elif="record.state.raw_value == 'rejected'">
+                                        <i class="fa fa-times-circle status-rejected" title="Rejected"/>
+                                    </t>
+                                    <t t-else="">
+                                        <i class="fa fa-hourglass-half status-pending" title="Pending"/>
+                                    </t>
                                 </div>
                             </div>
 
+                            <div class="card-body">
+                                <div class="date-range">
+                                    <div class="date-item">
+                                        <i class="fa fa-calendar-o date-icon" aria-hidden="true"/>
+                                         <span class="date-label">From:</span>
+                                        <span class="date-value">
+                                            <field name="start_date" widget="date"/>
+                                        </span>
+                                    </div>
+                                    <div class="date-item">
+                                        <i class="fa fa-calendar-check-o date-icon" aria-hidden="true"/>
+                                         <span class="date-label">To:</span>
+                                        <span class="date-value">
+                                            <field name="end_date" widget="date"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </t>
                 </templates>
