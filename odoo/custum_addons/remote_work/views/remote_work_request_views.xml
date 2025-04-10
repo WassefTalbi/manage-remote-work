@@ -6,8 +6,7 @@
         <field name="name">Request remote work </field>
         <field name="res_model">remote.work.request</field>
         <field name="view_mode">tree,form,calendar,kanban</field>
-        <field name="domain">[]</field>
-        <field name="context">{}</field>
+
         <field name="help" type="html">
             <p>VIDE</p>
         </field>
@@ -17,7 +16,7 @@
         <field name="name">remote.work.request.tree</field>
         <field name="model">remote.work.request</field>
         <field name="arch" type="xml">
-            <tree string="Remote work"
+            <tree string="Remote work" create="false"
             decoration-info="state == 'pending'"
                     decoration-danger="state == 'rejected'"
                     decoration-warning="state == 'expired'"
@@ -46,7 +45,7 @@
                 <sheet>
                     <div class="oe_title">
                         <label for="employee_id" string="Employee"/>
-                        <field name="employee_id" widget="many2one_avatar_user" class="oe_inline"/>
+                        <field name="employee_id" widget="many2one_avatar_user" class="oe_inline" readonly="1"/>
                     </div>
                     <group>
                         <group string="Dates">
@@ -90,18 +89,18 @@
         <field name="model">remote.work.request</field>
         <field name="groups_id" eval="[(4, ref('remote_work.group_remote_work_user'))]"/>
         <field name="arch" type="xml">
-            <kanban default_group_by="state" quick_create="False" class="centered-kanban-view" js_class="remote_work_kanban">
+            <kanban create="false" default_group_by="state" quick_create="False" class="centered-kanban-view" js_class="remote_work_kanban"
+            domain="[('start_date', '&gt;', current_date)]">
                 <field name="employee_id"/>
-                <field name="start_date"/>
                 <field name="end_date"/>
                 <field name="state"/>
                 <field name="duration_days"/>
+
                 <progressbar field="state" colors='{
                     "pending": "warning",
                     "approved": "success",
                     "rejected": "danger"
                 }'/>
-
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click remote-work-card">

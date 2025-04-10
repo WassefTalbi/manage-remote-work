@@ -10,8 +10,8 @@ class RemoteWorkRequest(models.Model):
     _inherit = ['mail.thread','mail.activity.mixin']
     employee_id = fields.Many2one('hr.employee', string='Employee', required=True,default=lambda self: self.env.user.employee_id)
     request_date = fields.Date(string='Request Date', default=fields.Date.today(), required=True)
-    start_date = fields.Date()
-    end_date = fields.Date()
+    start_date = fields.Date(required=True)
+    end_date = fields.Date(required=True)
     state = fields.Selection([
         ('pending', 'Pending'),
         ('approved', 'Approved'),
@@ -89,6 +89,8 @@ class RemoteWorkRequest(models.Model):
         for record in self:
             if record.state == 'pending':
                 record.write({'state': 'rejected'})
+
+
 
 
 
