@@ -20,6 +20,21 @@ class RemoteWorkRequest(models.Model):
         ('expired','Expired')
     ], string='Status',default='pending',group_expand="_read_group_states")
 
+    duration_days = fields.Integer(
+        string='Duration (Days)',
+        compute='_compute_duration_days',
+        store=True
+    )
+
+    @api.depends('start_date', 'end_date')
+    def _compute_duration_days(self):
+        for record in self:
+            if record.start_date and record.end_date:
+                delta = record.end_date - record.start_date
+                record.duration_days = delta.days + 1
+            else:
+                record.duration_days = 0
+
     @api.model
     def _read_group_states(self,stages,domain,order):
         return ['pending', 'approved', 'rejected']

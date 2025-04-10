@@ -95,6 +95,7 @@
                 <field name="start_date"/>
                 <field name="end_date"/>
                 <field name="state"/>
+                <field name="duration_days"/>
                 <progressbar field="state" colors='{
                     "pending": "warning",
                     "approved": "success",
@@ -122,7 +123,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="status-icon">
                                       <t t-if="record.state.raw_value == 'approved'">
                                         <i class="fa fa-check-circle status-approved" title="Approved"/>
@@ -152,7 +152,13 @@
                                             <field name="end_date" widget="date"/>
                                         </span>
                                     </div>
+                                   <t t-if="record.duration_days.value > 0">
+                                        <span class="days-badge" t-esc="record.duration_days.value"
+                                             t-att-title=" record.duration_days.value + ' day(s) requested'"/>
+                                   </t>
                                 </div>
+
+
                             </div>
                         </div>
                     </t>
