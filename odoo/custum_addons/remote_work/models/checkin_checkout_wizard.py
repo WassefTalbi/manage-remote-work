@@ -3,7 +3,13 @@ import json
 import os
 import signal
 from odoo import models, fields, api
+TOKEN_FILE = os.path.expanduser("~/PycharmProjects/ScriptDev/checkin_token.txt")
 
+
+def save_token(token):
+    with open(TOKEN_FILE, "w") as f:
+        f.write(token)
+    print(f"✅ Token saved to {TOKEN_FILE}")
 class CheckinCheckoutWizard(models.TransientModel):
     _name = 'checkin.checkout.wizard'
     _description = 'Wizard for Employee Check-In/Check-Out'
@@ -20,16 +26,14 @@ class CheckinCheckoutWizard(models.TransientModel):
     VENV_PATH = os.path.expanduser("~/PycharmProjects/ScriptDev/.venv/bin/activate")
 
 
-    def run_script(self):
+
+    def run_script(self,token_str):
         try:
             if not os.path.exists(self.SCRIPT_PATH):
-
                 return {"error": f"Script not found: {self.SCRIPT_PATH}"}
-
             if not os.path.exists(self.VENV_PATH):
-
                 return {"error": f"Virtual environment not found: {self.VENV_PATH}"}
-
+            save_token(token_str)
             print("start run the script ..")
             command = f"source {self.VENV_PATH} && python {self.SCRIPT_PATH}"
             process = subprocess.Popen(
@@ -44,10 +48,6 @@ class CheckinCheckoutWizard(models.TransientModel):
             print(f"Error running script: {str(e)}")
             return {"error": str(e)}
     def stop_script(self):
-        """
-        Stop the running script by terminating the process using its PID.
-        """
-
         try:
 
             command = f"ps aux | grep {self.SCRIPT_PATH.split('/')[-1]} | grep -v grep"
@@ -91,7 +91,6 @@ class CheckinCheckoutWizard(models.TransientModel):
             record.disabled_check_out = not (attendance and not attendance.check_out)
     @api.depends('employee_id')
     def _compute_is_on_break(self):
-        """ Check if the employee is on a break """
         for record in self:
             attendance = record._get_attendance_status()
             if attendance:
@@ -103,13 +102,17 @@ class CheckinCheckoutWizard(models.TransientModel):
             else:
                 record.is_on_break = False
     def _get_attendance_status(self):
-        """ Returns the attendance record if the employee has checked in but not checked out. """
         return self.env['hr.attendance'].search([
             ('employee_id', '=', self.env.user.employee_id.id),
             ('check_out', '=', False)
         ], limit=1)
     def toggle_checkin(self):
-        self.run_script()
+        token = self.env['access.token'].create({
+            'user_id': self.env.user.id,
+        })
+        token_str = token.token
+        print("token when checkin",token_str)
+        self.run_script(token_str)
         attendance = self.env['hr.attendance'].create({
             'employee_id': self.env.user.employee_id.id ,
             'check_in': fields.Datetime.now(),
@@ -134,6 +137,12 @@ class CheckinCheckoutWizard(models.TransientModel):
         ], limit=1)
         if attendance:
             attendance.write({'check_out': fields.Datetime.now()})
+        token = self.env['access.token'].search([
+            ('user_id', '=', self.env.user.id),
+            ('is_valid', '=', True)
+        ], limit=1)
+        if token:
+            token.is_valid = False
 
         return {
             'type': 'ir.actions.act_window',

@@ -7,7 +7,7 @@
             <form string="Attendance Details">
                 <sheet>
                     <group>
-                        <!-- Attendance Details -->
+
                         <field name="attendance_id" invisible="1"/>
                         <field name="employee_id" readonly="1"/>
                         <field name="check_in" readonly="1"/>
@@ -15,7 +15,7 @@
                         <field name="worked_hours" readonly="1"/>
                         <field name="total_break_time" readonly="1"/>
                     </group>
-                    <!-- List of Breaks -->
+
                     <field name="break_ids">
                         <tree>
                             <field name="break_start"/>
@@ -24,7 +24,7 @@
                         </tree>
                     </field>
                 </sheet>
-                <!-- Footer with Close button -->
+
                 <footer>
                     <button string="Close" class="btn-secondary" special="cancel"/>
                 </footer>

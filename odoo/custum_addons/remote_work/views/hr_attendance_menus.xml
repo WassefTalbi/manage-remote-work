@@ -23,6 +23,7 @@
                     <field name="worked_hours_display" decoration-danger="is_under_8_hours"/>
                     <field name="overtime_hours"/>
                     <button string="View Break Details" type="object" name="action_view_attendance_details" class="btn-info" icon="fa-eye"/>
+                    <button string="Consulte Activities" type="object" name="action_consulte_activities" class="btn-success" icon="fa-tripadvisor"/>
                     <field name="is_under_8_hours" invisible="1" optional="1"/>
 
                 </tree>

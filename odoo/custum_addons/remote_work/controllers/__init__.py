@@ -1,3 +1,4 @@
-from . import ActivityLoggerController
+#from . import ActivityLoggerController
+from  . import UserActivityController
 
 

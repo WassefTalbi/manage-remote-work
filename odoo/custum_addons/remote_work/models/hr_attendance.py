@@ -42,6 +42,9 @@ class HrAttendance(models.Model):
             'context': {'default_attendance_id': self.id},
         }
 
+    def action_consulte_activities(self):
+        return print("testing method consulte activities")
+
     @api.depends('worked_hours')
     def _compute_is_under_8_hours(self):
         for attendance in self:
@@ -59,13 +62,3 @@ class HrAttendance(models.Model):
             else:
                 attendance.overtime_hours = 0
 
-    def _get_geoip_response(mode, latitude=False, longitude=False):
-        return {
-            'city': request.geoip.city.name or _('Unknown'),
-            'country_name': request.geoip.country.name or request.geoip.continent.name or _('Unknown'),
-            'latitude': latitude or request.geoip.location.latitude or False,
-            'longitude': longitude or request.geoip.location.longitude or False,
-            'ip_address': request.geoip.ip,
-            'browser': request.httprequest.user_agent.browser,
-            'mode': mode
-        }

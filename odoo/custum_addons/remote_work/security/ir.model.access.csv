@@ -7,6 +7,6 @@ access_attendance_break_wizard_details,attendance break details Wizard User,mode
 access_remote_work_request_user,remote.work.request.user,model_remote_work_request,remote_work.group_remote_work_user,1,0,1,0
 access_remote_work_request_manager,remote.work.request.manager,model_remote_work_request,remote_work.group_remote_work_manager,1,1,1,1
 access_remote_work_day,access_remote_work_day,model_remote_work_day,,1,1,1,1
-
+access_token_attendance_activities,Access Token,model_access_token,,1,1,1,1
 
 

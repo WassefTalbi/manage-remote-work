@@ -1,8 +1,15 @@
 from odoo import http
 from odoo.http import request
 import json
+import logging
+import functools
+import werkzeug.wrappers
 
+_logger = logging.getLogger(__name__)
 class ActivityLogger(http.Controller):
+
+
+
 
     @http.route('/api/user-activity', type='json', auth='user', methods=['POST'])
     def user_activity(self):
