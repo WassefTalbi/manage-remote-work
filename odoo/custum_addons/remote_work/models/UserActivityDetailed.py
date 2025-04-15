@@ -12,3 +12,4 @@ class UserActivityDetailed(models.Model):
     key_presses = fields.Integer('Key Presses')
     keys = fields.Text('Keys Pressed')
     application_usage = fields.Text('Application Usage')
+    attendance_id = fields.Many2one('hr.attendance', string='Attendance Record')

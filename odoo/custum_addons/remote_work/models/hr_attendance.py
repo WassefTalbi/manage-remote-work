@@ -10,6 +10,8 @@ class HrAttendance(models.Model):
     break_ids = fields.One2many("hr.break", "attendance_id", string="Breaks")
     total_break_time = fields.Float(string="Total Break Time (minutes)", compute="_compute_total_break_time", store=True)
     is_under_8_hours = fields.Boolean(string="is_under_8_hours ",compute="_compute_is_under_8_hours", store=False)
+    user_activity_ids = fields.One2many('user.activity.detailed', 'attendance_id', string='User Activities')
+    system_usage_ids = fields.One2many('system.usage.detailed', 'attendance_id', string='System Usage')
 
     @api.depends('break_ids.break_duration')
     def _compute_total_break_time(self):
@@ -43,7 +45,19 @@ class HrAttendance(models.Model):
         }
 
     def action_consulte_activities(self):
-        return print("testing method consulte activities")
+        return {
+            'name': 'Activity Report',
+            'type': 'ir.actions.act_window',
+            'res_model': 'activity.report.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'views': [(self.env.ref('remote_work.view_activity_report_wizard_form').id, 'form')],
+            'context': {
+                'default_attendance_id': self.id,
+            }
+        }
+
+
 
     @api.depends('worked_hours')
     def _compute_is_under_8_hours(self):

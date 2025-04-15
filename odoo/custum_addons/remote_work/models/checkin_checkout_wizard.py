@@ -9,7 +9,7 @@ TOKEN_FILE = os.path.expanduser("~/PycharmProjects/ScriptDev/checkin_token.txt")
 def save_token(token):
     with open(TOKEN_FILE, "w") as f:
         f.write(token)
-    print(f"✅ Token saved to {TOKEN_FILE}")
+    print(f"Token saved to {TOKEN_FILE}")
 class CheckinCheckoutWizard(models.TransientModel):
     _name = 'checkin.checkout.wizard'
     _description = 'Wizard for Employee Check-In/Check-Out'
@@ -122,10 +122,10 @@ class CheckinCheckoutWizard(models.TransientModel):
             'res_model': 'hr.attendance',
             'view_mode': 'tree',
             'target': 'current',
-            'xml': [(self.env.ref('remote_work.hr_attendance_tree_view').id, 'tree')],
+            'view_id': self.env.ref('remote_work.hr_attendance_tree_view').id,
             'context': {
                 'default_employee_id': self.env.user.employee_id.id,
-                'search_default_filter': 1,
+
 
             }
         }
@@ -149,10 +149,10 @@ class CheckinCheckoutWizard(models.TransientModel):
             'res_model': 'hr.attendance',
             'view_mode': 'tree',
             'target': 'current',
-            'xml': [(self.env.ref('remote_work.hr_attendance_tree_view').id, 'tree')],
+            'view_id': self.env.ref('remote_work.hr_attendance_tree_view').id,
             'context': {
                 'default_employee_id': self.env.user.employee_id.id,
-                'search_default_filter': 1
+
             }
         }
 

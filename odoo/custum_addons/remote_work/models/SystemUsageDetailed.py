@@ -12,3 +12,4 @@ class SystemUsageDetailed(models.Model):
     disk_usage = fields.Text('Disk Usage')
     network_sent = fields.Char('Network Sent')
     network_received = fields.Char('Network Received')
+    attendance_id = fields.Many2one('hr.attendance', string='Attendance Record')

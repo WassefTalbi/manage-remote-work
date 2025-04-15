@@ -16,6 +16,7 @@
          'views/pause_reprise_wizard_views.xml',
          'views/hr_break_wizard_views.xml',
          'views/remote_work_request_views.xml',
+         'views/activity_report_wizard.xml',
          'views/hr_attendance_menus.xml',
 
 

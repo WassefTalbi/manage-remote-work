@@ -4,9 +4,6 @@ from datetime import datetime
 import json
 
 class UserActivityController(http.Controller):
-    @http.route('/api/test', type='http', auth='none', methods=['POST'], csrf=False)
-    def test(self, **post):
-        return  print("testing")
 
 
     @http.route("/api/user-activity", methods=["POST"], type="http", auth="none", csrf=False)
@@ -14,7 +11,7 @@ class UserActivityController(http.Controller):
         print("testing in the controller log_user_activity")
         auth_header = http.request.httprequest.headers.get('Authorization')
         if not auth_header or not auth_header.startswith('Bearer '):
-            raise AccessDenied("Missing or invalid token")
+            raise AccessDenied("Missing of token")
         token_str = auth_header.split('Bearer ')[1]
         token = http.request.env['access.token'].sudo().search([
             ('token', '=', token_str),
@@ -22,12 +19,17 @@ class UserActivityController(http.Controller):
         ], limit=1)
         if not token:
             raise AccessDenied("Invalid or expired token")
+        current_attendance = http.request.env['hr.attendance'].sudo().search([
+            ('employee_id.user_id', '=', token.user_id.id),
+            ('check_out', '=', False)
+        ], limit=1)
         data = json.loads(http.request.httprequest.data)
         if not isinstance(data.get('timestamp'), str):
             raise ValueError("Invalid timestamp format")
         timestamp = datetime.fromisoformat(data['timestamp']).strftime("%Y-%m-%d %H:%M:%S")
         http.request.env['user.activity.detailed'].sudo().create({
             'user_id': token.user_id.id,
+            'attendance_id': current_attendance.id if current_attendance else False,
             'timestamp': timestamp,
             'mouse_clicks': data.get('mouse_clicks'),
             'scrolls': data.get('scrolls'),
@@ -43,7 +45,7 @@ class UserActivityController(http.Controller):
         print("testing in the controller log_system_usage")
         auth_header = http.request.httprequest.headers.get('Authorization')
         if not auth_header or not auth_header.startswith('Bearer '):
-            raise AccessDenied("Missing or invalid token")
+            raise AccessDenied("Missing of token")
         token_str = auth_header.split('Bearer ')[1]
         token = http.request.env['access.token'].sudo().search([
             ('token', '=', token_str),
@@ -51,13 +53,17 @@ class UserActivityController(http.Controller):
         ], limit=1)
         if not token:
             raise AccessDenied("Invalid or expired token")
-
+        current_attendance = http.request.env['hr.attendance'].sudo().search([
+            ('employee_id.user_id', '=', token.user_id.id),
+            ('check_out', '=', False)
+        ], limit=1)
         data = json.loads(http.request.httprequest.data)
         if not isinstance(data.get('timestamp'), str):
             raise ValueError("Invalid timestamp format")
         timestamp = datetime.fromisoformat(data['timestamp']).strftime("%Y-%m-%d %H:%M:%S")
         http.request.env['system.usage.detailed'].sudo().create({
             'user_id': token.user_id.id,
+            'attendance_id': current_attendance.id if current_attendance else False,
             'timestamp': timestamp,
             'cpu_usage': json.dumps(data.get('cpu_usage')),
             'memory_used': data.get('memory_used'),

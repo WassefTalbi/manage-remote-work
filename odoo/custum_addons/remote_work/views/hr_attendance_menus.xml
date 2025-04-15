@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-
-
-        <!-- Action to open the breaks wizard -->
         <record id="action_open_attendance_wizard" model="ir.actions.act_window">
             <field name="name">Attendance Details</field>
             <field name="res_model">hr.break.wizard</field>
@@ -16,18 +13,16 @@
             <field name="name">hr.attendance.tree</field>
             <field name="model">hr.attendance</field>
             <field name="arch" type="xml">
-                <tree create="False">
+                <tree create="False" decoration-danger="is_under_8_hours">
                     <field name="employee_id" widget="many2one_avatar_user"/>
                     <field name="check_in"/>
                     <field name="check_out"/>
-                    <field name="worked_hours_display" decoration-danger="is_under_8_hours"/>
+                    <field name="worked_hours_display" />
                     <field name="overtime_hours"/>
                     <button string="View Break Details" type="object" name="action_view_attendance_details" class="btn-info" icon="fa-eye"/>
-                    <button string="Consulte Activities" type="object" name="action_consulte_activities" class="btn-success" icon="fa-tripadvisor"/>
+                    <button string="Consulte Activities" type="object" name="action_consulte_activities" class="btn-success " icon="fa-tripadvisor"/>
                     <field name="is_under_8_hours" invisible="1" optional="1"/>
-
                 </tree>
-
             </field>
         </record>
 
@@ -146,22 +141,17 @@
                     </p>
                 </field>
             </record>
-        <!-- Root menu -->
 
         <menuitem id="menu_hr_attendance_root_menu" name="Manage Remote" sequence="10" action="action_hr_attendance_list"/>
 
-        <!-- Main submenu -->
         <menuitem id="menu_hr_attendance_main" name="Attendances" parent="menu_hr_attendance_root_menu" sequence="20"/>
+
         <menuitem id="menu_hr_attendance_reporting" name="Reporting" parent="menu_hr_attendance_root_menu" sequence="15" groups="hr_attendance.group_hr_attendance_officer" action="hr_attendance_reporting"/>
 
+        <menuitem id="checkin_checkout_wizard_menu" name="Check In-Out" parent="menu_hr_attendance_main" action="action_checkin_checkout_wizard"/>
 
-        <!-- Check In-Out menu -->
-      <menuitem id="checkin_checkout_wizard_menu" name="Check In-Out" parent="menu_hr_attendance_main" action="action_checkin_checkout_wizard"/>
+        <menuitem id="pause_reprise_wizard_menu" name="Pause-Reprise" parent="menu_hr_attendance_main" action="action_pause_reprise_wizard"/>
 
-        <!-- Pause-Reprise menu -->
-      <menuitem id="pause_reprise_wizard_menu" name="Pause-Reprise" parent="menu_hr_attendance_main" action="action_pause_reprise_wizard"/>
-
-      <menuitem id="menu_remote_work_request" name="Requests" parent="menu_hr_attendance_root_menu" action="view_remote_work_request_action"/>
-
+        <menuitem id="menu_remote_work_request" name="Requests" parent="menu_hr_attendance_root_menu" action="view_remote_work_request_action"/>
     </data>
 </odoo>

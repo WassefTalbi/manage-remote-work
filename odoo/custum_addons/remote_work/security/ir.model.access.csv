@@ -8,5 +8,8 @@ access_remote_work_request_user,remote.work.request.user,model_remote_work_reque
 access_remote_work_request_manager,remote.work.request.manager,model_remote_work_request,remote_work.group_remote_work_manager,1,1,1,1
 access_remote_work_day,access_remote_work_day,model_remote_work_day,,1,1,1,1
 access_token_attendance_activities,Access Token,model_access_token,,1,1,1,1
+activity_report_wizard,activity.report.wizard,model_activity_report_wizard,,1,1,1,1
+access_user_activity,User Activity Admin,model_user_activity_detailed,,1,1,1,1
+access_system_usage,System Usage Admin,model_system_usage_detailed,,1,1,1,1
 
 
