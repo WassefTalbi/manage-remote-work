@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+   <record id="view_pause_reprise_wizard" model="ir.ui.view">
+    <field name="name">pause.reprise.wizard.form</field>
+    <field name="model">pause.reprise.wizard</field>
+    <field name="arch" type="xml">
+        <form string="Break / Resume Management ">
+            <sheet>
+                <group>
+                    <field name="employee_id" readonly="1"/>
+                    <field name="break_start" readonly="1"/>
+                    <field name="total_break_time" readonly="1"/>
+                    <field name="disabled_break" invisible="1"/>
+                    <field name="disabled_resume" invisible="1"/>
+                    <field name="has_checked_in" invisible="1"/>
+                </group>
+                <footer>
+                    <button name="start_break" type="object" string="Start Break" class="btn-warning"
+                            invisible="not has_checked_in or disabled_break"/>
+                    <button name="end_break" type="object" string="End Break" class="btn-success"
+                            invisible="disabled_resume"/>
+                    <p invisible="has_checked_in" class="text-warning">Please check in before starting a break.</p>
+                    <button string="Cancel" class="btn-secondary" invisible="not has_checked_in" special="cancel"/>
+                </footer>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+
+    <record id="action_pause_reprise_wizard" model="ir.actions.act_window">
+        <field name="name">Pause-Reprise</field>
+        <field name="res_model">pause.reprise.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_pause_reprise_wizard"/>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

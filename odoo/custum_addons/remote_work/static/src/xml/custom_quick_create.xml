@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="remote_work.CustomQuickCreate" owl="1">
+        <div class="custom_quick_create">
+            <div class="modal-header">
+                <h5 class="modal-title" t-esc="props.title || _t('New Remote Work Request')"/>
+                <button type="button" class="btn-close" t-on-click="props.close"/>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label" t-esc="_t('Title')"/>
+                    <input type="text" class="form-control" t-model="state.title"/>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" t-esc="_t('Date')"/>
+                    <input type="date" class="form-control" t-model="state.date"/>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" t-on-click="props.close">
+                    <t t-esc="_t('Cancel')"/>
+                </button>
+                <button type="button" class="btn btn-primary" t-on-click="save">
+                    <t t-esc="_t('Save')"/>
+                </button>
+            </div>
+        </div>
+    </t>
+</templates>

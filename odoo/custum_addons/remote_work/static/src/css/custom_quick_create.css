@@ -1,0 +1,12 @@
+.custom_quick_create {
+    min-width: 400px;
+}
+
+.custom_quick_create .modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.custom_quick_create .modal-footer {
+    border-top: 1px solid #dee2e6;
+}

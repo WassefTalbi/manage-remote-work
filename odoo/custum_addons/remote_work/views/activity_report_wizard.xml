@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_activity_report_wizard_form" model="ir.ui.view">
+        <field name="name">activity.report.wizard.form</field>
+        <field name="model">activity.report.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <field name="attendance_id" invisible="1" widget="many2one"/>
+                    <field name="employee_id" widget="many2one_avatar_user" readonly="1" string=""/>
+                    <group >
+                            <div class=" d-flex align-items-center" style="margin-left: 200px;">
+                                <i class="fa fa-sign-in text-success mr-2" title="Check In" style="font-size: 1.5em;"/>
+                                <div style="margin-left: 7px;">
+                                    <div class="text-muted small o_form_label">Check In</div>
+                                    <field name="check_in" readonly="1"/>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center " style="margin-left: 120px;" >
+                                    <i class="fa fa-sign-out text-danger mr-2" title="Check Out" style="font-size: 1.5em;"/>
+                                    <div style="margin-left: 7px;">
+                                        <div class="text-muted small o_form_label">Check Out</div>
+                                        <field name="check_out" readonly="1"
+                                               invisible="check_out == False"/>
+                                        <span class="text-muted" invisible="check_out != False">
+                                            Not yet checked out
+                                        </span>
+                                    </div>
+                                </div>
+
+
+
+                    </group>
+                    <group string="User Activities" >
+                        <field name="user_activities" string="">
+                            <kanban class="o_kanban_mobile">
+                                <field name="timestamp"/>
+                                <field name="mouse_clicks"/>
+                                <field name="scrolls"/>
+                                <field name="key_presses"/>
+                                <field name="keys"/>
+                                <field name="application_summary"/>
+
+                                <templates>
+                                    <t t-name="kanban-box">
+                                        <div class="oe_kanban_global_click system-card bg-light p-3 rounded shadow-sm">
+                                            <div class="row mb-2">
+                                                <div class="col">
+                                                    <i class="fa fa-clock-o" title="Time"/>
+                                                    <small class="text-muted">
+                                                        <field name="timestamp" widget="datetime"/>
+                                                    </small>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="border-bottom: 1px solid #eee; padding-bottom: 8px;">
+                                                <!-- Mouse Activity -->
+                                                <div class="col-4 text-center">
+                                                    <div class="metric-box">
+                                                        <i class="fa fa-hand-pointer-o fa-2x text-primary" title="Mouse Activity"/>
+                                                        <div class="metric-value">
+                                                            <field name="mouse_clicks"/> clicks
+                                                        </div>
+                                                        <t t-if="record.mouse_clicks.raw_value > 0">
+                                                            <div class="progress" style="height: 8px;">
+                                                                <div class="progress-bar bg-success"
+                                                                     t-att-style="'width: ' + Math.min(100, (record.mouse_clicks.raw_value / 100 * 100)) + '%'"/>
+                                                            </div>
+                                                            <!-- Ensure 'movements' field exists in your model -->
+                                                            <small class="text-muted">+<field name="movements"/> movements</small>
+                                                        </t>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Scroll Activity -->
+                                                <div class="col-4 text-center">
+                                                    <div class="metric-box">
+                                                        <i class="fa fa-arrows-v fa-2x text-info" title="Scroll Activity"/>
+                                                        <div class="metric-value">
+                                                            <field name="scrolls"/> scrolls
+                                                        </div>
+                                                        <t t-if="record.scrolls.raw_value > 50">
+                                                            <div class="badge badge-success">High Engagement</div>
+                                                        </t>
+                                                        <div class="progress mt-1" style="height: 8px;">
+                                                            <div class="progress-bar"
+                                                                 t-att-class="record.scrolls.raw_value > 50 ? 'bg-success' : 'bg-warning'"
+                                                                 t-att-style="'width: ' + Math.min(100, (record.scrolls.raw_value / 100 * 100)) + '%'"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Keyboard Activity -->
+                                                <div class="col-4 text-center">
+                                                    <div class="metric-box">
+                                                        <i class="fa fa-keyboard-o fa-2x text-danger" title="Keyboard Activity"/>
+                                                        <div class="metric-value">
+                                                            <field name="key_presses"/> keys
+                                                        </div>
+                                                        <div class="progress mt-1" style="height: 8px;">
+                                                            <div class="progress-bar bg-info"
+                                                                 t-att-style="'width: ' + Math.min(100, (record.key_presses.raw_value / 200 * 100)) + '%'"/>
+                                                        </div>
+                                                        <small class="text-muted" t-if="record.keys.raw_value">
+                                                            "<t t-esc="record.keys.raw_value.substring(0,15)"/>..."
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mt-2">
+                                                    <div class="app-usage">
+
+                                                       <h5> <i class="fa fa-linux" title="Application Usage"/> Active Application:</h5>
+                                                        <t t-if="record.application_summary.raw_value">
+                                                            <t t-foreach="record.application_summary.raw_value" t-as="app">
+                                                                <div>
+                                                                    <div class="card" t-attf-style="border: 2px solid #{app.color};">
+                                                                        <div class="card-body p-2">
+                                                                                    <i t-attf-class="fa #{app.icon} "
+                                                                                       t-attf-style="color: #{app.color} ;margin-right:1px"
+                                                                                       t-attf-title="#{app.category}"/>
+                                                                                    <span t-esc="app.name"/>
+                                                                            <span  t-esc="app.category" t-attf-style="margin-left:4px"/>
+                                                                            <span t-attf-style="color: #{app.color} ;margin-left:4px"
+                                                                                  t-esc="app.time_spent"/>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </t>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <div class="text-muted">No application data available</div>
+                                                        </t>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </templates>
+                            </kanban>
+                        </field>
+                    </group>
+
+                    <group string="System Usage" >
+                        <field name="system_usage" string="" >
+                            <kanban class="o_kanban_mobile">
+                                <field name="timestamp"/>
+                                <field name="cpu_usage"/>
+                                <field name="memory_used"/>
+                                <field name="memory_percent"/>
+                                <field name="disk_usage"/>
+                                <field name="network_sent"/>
+                                <field name="network_received"/>
+                                <templates>
+                                    <t t-name="kanban-box">
+                                        <div class="oe_kanban_global_click system-card bg-light p-3 rounded shadow-sm">
+                                            <div class="row mb-2">
+                                                <div class="col">
+                                                    <i class="fa fa-clock-o" title="Time"/>
+                                                    <small class="text-muted">
+                                                        <field name="timestamp" widget="datetime"/>
+                                                    </small>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <!-- CPU -->
+                                                <div class="col-3 text-center">
+                                                    <i class="fa fa-microchip fa-2x text-primary mb-2" title="CPU Usage"/>
+                                                    <h6>CPU</h6>
+                                                    <field name="cpu_usage" class="text-muted small"/>
+                                                </div>
+
+                                                <!-- Memory -->
+                                                <div class="col-3 text-center">
+                                                    <i class="fa fa-line-chart fa-2x text-success mb-2" title="Memory Usage"/>
+                                                    <h6>Memory</h6>
+                                                    <field name="memory_used" class="small"/>
+                                                    <div class="progress mt-1" style="height: 8px;">
+                                                        <div class="progress-bar bg-success"
+                                                             t-att-style="'width: ' + record.memory_percent.raw_value + '%'"/>
+                                                    </div>
+                                                </div>
+                                                <!-- Disk -->
+                                                <div class="col-3 text-center">
+                                                    <i class="fa fa-hdd-o fa-2x text-warning mb-2" title="Disk Usage"/>
+                                                    <h6>Disk</h6>
+                                                    <field name="disk_usage" class="small"/>
+                                                </div>
+
+                                                <!-- Network -->
+                                                <div class="col-3 text-center">
+                                                    <div class="mb-2">
+                                                        <i class="fa fa-cloud-upload fa-2x text-info" title="Network Upload"/>
+                                                        <field name="network_sent" class="small"/>
+                                                    </div>
+                                                    <div>
+                                                        <i class="fa fa-cloud-download fa-2x text-danger" title="Network Download"/>
+                                                        <field name="network_received" class="small"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </templates>
+                            </kanban>
+                        </field>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
