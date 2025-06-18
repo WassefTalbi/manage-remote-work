@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_activity_report_wizard_form" model="ir.ui.view">
+        <field name="name">activity.report.wizard.form</field>
+        <field name="model">activity.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Activity Report">
+                <sheet>
+                    <field name="attendance_id" invisible="1" widget="many2one"/>
+                    <field name="employee_id" widget="many2one_avatar_user" readonly="1" string="" class="mb-2"/>
+
+
+                    <div class="d-flex gap-3 mb-4 mt-2">
+
+                        <div class="border rounded shadow-sm bg-light px-3 py-2 w-50">
+                            <div class="d-flex align-items-center">
+                                <i class="fa fa-sign-in text-success me-2" style="font-size: 1.3em;" title="Check In"/>
+                                <div>
+                                    <div class="text-muted small fw-bold">Check In</div>
+                                    <field name="check_in" readonly="1"/>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="border rounded shadow-sm bg-light px-3 py-2 w-50">
+                            <div class="d-flex align-items-center">
+                                <i class="fa fa-sign-out text-danger me-2" style="font-size: 1.3em;" title="Check Out"/>
+                                <div>
+                                    <div class="text-muted small fw-bold">Check Out</div>
+                                    <field name="check_out" readonly="1" invisible="check_out == False"/>
+                                    <span class="text-muted small" invisible="check_out != False">Not yet checked out</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <h6 class="text-uppercase text-muted fw-bold mt-3 mb-2">
+                        <i class="fa fa-desktop text-primary fa-lg me-3" title="Application used"/>
+                        Applications Used</h6>
+                    <div style="max-height: 250px; overflow-y: auto;">
+                        <field name="app_usage_ids">
+                            <kanban class="o_kanban_mobile">
+                                <field name="name"/>
+                                <field name="formatted_time"/>
+                                <templates>
+                                    <t t-name="kanban-box">
+                                        <div class="oe_kanban_global_click card border rounded shadow-sm p-3 my-2">
+                                            <div class="card-body p-0">
+                                                <h6 class="card-title d-flex align-items-center mb-1">
+                                                    <i class="fa fa-desktop text-primary me-2"/>
+                                                    <t t-esc="record.name.value"/>
+                                                </h6>
+                                                <p class="card-text text-muted mb-0">
+                                                    Duration: <strong><t t-esc="record.formatted_time.value"/></strong>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </templates>
+                            </kanban>
+                        </field>
+                    </div>
+
+
+                    <h6 class="text-uppercase text-muted fw-bold mt-4 mb-2">
+                        <i class="fa fa-globe text-info fa-lg me-3 mt-1" title="Website visited"/>
+                        Websites Visited</h6>
+                    <div style="max-height: 250px; overflow-y: auto;">
+                        <field name="site_usage_ids">
+                            <kanban class="o_kanban_mobile">
+                                <field name="name"/>
+                                <field name="formatted_time"/>
+                                <templates>
+                                    <t t-name="kanban-box">
+                                        <t t-set="domain" t-value="record.name.value.includes('/') ? record.name.value.split('/')[2] : ''"/>
+                                        <div class="oe_kanban_global_click card border rounded shadow-sm p-3 my-2">
+                                            <div class="card-body p-0">
+                                                <h6 class="card-title d-flex align-items-center mb-1">
+                                                    <img
+                                                        t-att-src="'https://www.google.com/s2/favicons?sz=32&amp;domain=' + domain"
+                                                        class="me-2" style="width: 16px; height: 16px;"
+                                                        alt="favicon"
+                                                        loading="lazy"
+                                                        onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '&lt;i class=&quot;fa fa-link text-secondary me-2&quot; style=&quot;font-size: 1.1em;&quot;&gt;&lt;/i&gt;')"
+                                                    />
+                                                    <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 320px; display: inline-block;">
+                                                        <t t-esc="record.name.value"/>
+                                                    </span>
+                                                </h6>
+                                                <p class="card-text text-muted mb-0">
+                                                    Duration: <strong><t t-esc="record.formatted_time.value"/></strong>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </templates>
+
+                            </kanban>
+                        </field>
+                    </div>
+
+                </sheet>
+
+                <footer>
+                    <button string="Close" class="btn btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

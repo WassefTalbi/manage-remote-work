@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_hr_attendance_wizard_form" model="ir.ui.view">
+        <field name="name">hr.attendance.wizard.form</field>
+        <field name="model">hr.break.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Attendance Details">
+                <sheet>
+                    <!-- Employee & Attendance Info -->
+                    <div class="card shadow-sm rounded mb-4 p-3">
+                        <h6 class="text-muted text-uppercase fw-bold mb-3">
+                            <i class="fa fa-user me-2 text-primary"/> Employee Attendance Info
+                        </h6>
+                        <div class="row">
+                            <!-- Employee -->
+                            <div class="col-6 mb-3 d-flex align-items-center">
+
+                                <field name="employee_id"  widget="many2one_avatar_user" readonly="1" class="w-100"/>
+                            </div>
+
+                            <!-- Hidden Attendance ID -->
+                            <div class="col-6 mb-3">
+                                <field name="attendance_id" invisible="1"/>
+                            </div>
+
+                            <!-- Check In -->
+                            <div class="col-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="fa fa-sign-in text-success me-2" style="font-size: 1.3em;" title="Check In"/>
+                                    <div class="o_form_label me-2">Check In</div>
+                                </div>
+                                <field name="check_in" readonly="1" class="w-100"/>
+                            </div>
+
+                            <!-- Check Out -->
+                            <div class="col-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="fa fa-sign-out text-danger me-2" style="font-size: 1.3em;" title="Check Out"/>
+                                    <div class="o_form_label me-2">Check Out</div>
+                                </div>
+                                <field name="check_out" readonly="1" class="w-100"/>
+                            </div>
+
+                            <!-- Worked Hours -->
+                            <div class="col-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="fa fa-briefcase text-info me-2" title="Worked Hours"/>
+                                    <div class="o_form_label me-2">Worked Hours</div>
+                                </div>
+                                <field name="worked_hours" readonly="1" class="w-100"/>
+                            </div>
+
+                            <!-- Total Break Time -->
+                            <div class="col-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="fa fa-coffee text-warning me-2" title="Break Time"/>
+                                    <div class="o_form_label me-2">Total Break Time</div>
+                                </div>
+                                <field name="total_break_time" readonly="1" class="w-100"/>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Breaks Taken -->
+                    <div class="card shadow-sm rounded mb-2 p-3">
+                        <h6 class="text-muted text-uppercase fw-bold mb-3">
+                            <i class="fa fa-coffee me-2 text-warning"/> Break History
+                        </h6>
+                        <div style="max-height: 250px; overflow-y: auto;">
+                            <field name="break_ids">
+                                <kanban class="o_kanban_mobile">
+                                    <field name="break_start"/>
+                                    <field name="break_end"/>
+                                    <field name="break_duration"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div class="oe_kanban_global_click card border rounded shadow-sm p-3 my-2">
+                                                <div class="card-body p-0">
+                                                    <h6 class="card-title text-primary fw-bold d-flex align-items-center mb-3">
+                                                        <i class="fa fa-clock-o me-2"/> Break Entry
+                                                    </h6>
+                                                    <p class="mb-2 d-flex align-items-center">
+                                                        <i class="fa fa-play-circle text-success me-2" title="Break Start"/>
+                                                        <strong class="me-1">Start:</strong>
+                                                        <span><t t-esc="record.break_start.value"/></span>
+                                                    </p>
+                                                    <p class="mb-2 d-flex align-items-center">
+                                                        <i class="fa fa-stop-circle text-danger me-2" title="Break End"/>
+                                                        <strong class="me-1">End:</strong>
+                                                        <span><t t-esc="record.break_end.value"/></span>
+                                                    </p>
+                                                    <p class="mb-0 d-flex align-items-center text-muted">
+                                                        <i class="fa fa-hourglass-half text-info me-2" title="Duration"/>
+                                                        <strong class="me-1">Duration:</strong>
+                                                        <span><t t-esc="record.break_duration.value"/></span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                            </field>
+                        </div>
+                    </div>
+                </sheet>
+                <footer>
+                    <button string="Close" class="btn btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

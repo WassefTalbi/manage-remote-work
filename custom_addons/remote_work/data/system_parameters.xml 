@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Add system parameter to track if planning slots have been generated -->
+    <record id="param_planning_slots_generated" model="ir.config_parameter">
+        <field name="key">my_module.planning_slots_generated</field>
+        <field name="value">False</field>
+    </record>
+</odoo>
