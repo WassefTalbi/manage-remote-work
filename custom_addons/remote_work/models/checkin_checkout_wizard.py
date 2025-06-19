@@ -9,13 +9,13 @@ import os
 import signal
 TOKEN_FILE = os.path.expanduser("~/PycharmProjects/ScriptDev/checkin_token.txt")
 
-def save_token(token):
-    try:
-        with open(TOKEN_FILE, "w") as f:
-            f.write(token)
-        print(f"✅ Token saved to {TOKEN_FILE}")
-    except IOError as e:
-        raise UserError(_("Failed to save token: %s") % e)
+# def save_token(token):
+#     try:
+#         with open(TOKEN_FILE, "w") as f:
+#             f.write(token)
+#         print(f"✅ Token saved to {TOKEN_FILE}")
+#     except IOError as e:
+#         raise UserError(_("Failed to save token: %s") % e)
 class CheckinCheckoutWizard(models.TransientModel):
     _name = 'checkin.checkout.wizard'
     _description = 'Wizard for Employee Check-In/Check-Out'
@@ -31,48 +31,48 @@ class CheckinCheckoutWizard(models.TransientModel):
     SCRIPT_PATH = os.path.expanduser("~/PycharmProjects/ScriptDev/integrated.py")
     VENV_PYTHON = os.path.expanduser("~/PycharmProjects/ScriptDev/.venv/bin/python")
 
-    def run_script(self, token_str):
-        try:
-            script_path = type(self).SCRIPT_PATH
-            python_path = type(self).VENV_PYTHON
-
-            if not os.path.exists(script_path):
-                raise UserError(_("Script not found at %s") % script_path)
-            if not os.path.exists(python_path):
-                raise UserError(_("Python binary not found at %s") % python_path)
-
-            save_token(token_str)
-
-            process = subprocess.Popen(
-                [python_path, script_path],
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True
-            )
-            print("✅ Script started with PID:", process.pid)
-
-        except Exception as e:
-            raise UserError(_("Error starting script: %s") % e)
-
-    def stop_script(self):
-        try:
-            script_name = self.SCRIPT_PATH.split('/')[-1]
-            command = f"ps aux | grep {script_name} | grep -v grep"
-            process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            out, _ = process.communicate()
-
-            if out:
-                lines = out.decode().splitlines()
-                for line in lines:
-                    pid = int(line.split()[1])
-                    print(f"Sending SIGINT to PID: {pid}")
-                    os.kill(pid, signal.SIGINT)
-
-                    _, status = os.waitpid(pid, 0)
-                    print(f"Process {pid} exited with status {status}")
-
-        except Exception as e:
-            print(f"Error stopping script: {str(e)}")
+    # def run_script(self, token_str):
+    #     try:
+    #         script_path = type(self).SCRIPT_PATH
+    #         python_path = type(self).VENV_PYTHON
+    #
+    #         if not os.path.exists(script_path):
+    #             raise UserError(_("Script not found at %s") % script_path)
+    #         if not os.path.exists(python_path):
+    #             raise UserError(_("Python binary not found at %s") % python_path)
+    #
+    #         save_token(token_str)
+    #
+    #         process = subprocess.Popen(
+    #             [python_path, script_path],
+    #             stdout=subprocess.PIPE,
+    #             stderr=subprocess.PIPE,
+    #             text=True
+    #         )
+    #         print("✅ Script started with PID:", process.pid)
+    #
+    #     except Exception as e:
+    #         raise UserError(_("Error starting script: %s") % e)
+    #
+    # def stop_script(self):
+    #     try:
+    #         script_name = self.SCRIPT_PATH.split('/')[-1]
+    #         command = f"ps aux | grep {script_name} | grep -v grep"
+    #         process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    #         out, _ = process.communicate()
+    #
+    #         if out:
+    #             lines = out.decode().splitlines()
+    #             for line in lines:
+    #                 pid = int(line.split()[1])
+    #                 print(f"Sending SIGINT to PID: {pid}")
+    #                 os.kill(pid, signal.SIGINT)
+    #
+    #                 _, status = os.waitpid(pid, 0)
+    #                 print(f"Process {pid} exited with status {status}")
+    #
+    #     except Exception as e:
+    #         print(f"Error stopping script: {str(e)}")
 
     @api.model
     def default_get(self, fields_list):
@@ -124,7 +124,8 @@ class CheckinCheckoutWizard(models.TransientModel):
         })
         token_str = token.token
         print("token when checkin",token_str)
-        self.run_script(token_str)
+        #self.run_script(token_str)
+        ScriptAgent.checkin(self.env, token_str)
         attendance = self.env['hr.attendance'].create({
             'employee_id': self.env.user.employee_id.id ,
             'check_in': fields.Datetime.now(),
